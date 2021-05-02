@@ -1,0 +1,128 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+body {
+	overflow: hidden;
+	width: 100vw;
+	height: 100vh;
+	position: relative;
+}
+.tools {
+	height: 60px;
+	width: 100%;
+	box-shadow: 5px 5px 20px 2px #ccc;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.tools > div {
+	margin: 0 30px;
+	padding: 10px;
+	width: 60px;
+	height: 60px;
+	font-size: 30px;
+	color: purple;
+	transition: background-color 0.2s ease-in-out;
+}
+
+.tools > div:hover {
+	background-color: #eee;
+}
+
+.tools > div.clicked {
+	background-color: #eee;
+}
+
+.colors {
+	background-color: #ddd;
+	border-radius: 25px;
+	padding: 5px;
+	width: 230px;
+	justify-content: space-around;
+	align-content: center;
+	position: absolute;
+	top: 7px;
+	left: 45%;
+	display: none;
+}
+.colors.show {
+	display: flex;
+}
+.black,
+.red,
+.blue,
+.yellow,
+.green,
+.violet {
+	width: 25px;
+	height: 25px;
+	margin: 5px 5px;
+	border-radius: 50%;
+}
+.black {
+	background-color: black;
+}
+.red {
+	background-color: red;
+}
+.blue {
+	background-color: blue;
+}
+.violet {
+	background-color: violet;
+}
+.yellow {
+	background-color: yellow;
+}
+.green {
+	background-color: green;
+}
+
+/* .color-indicator {
+	position: absolute;
+	top: 60px;
+	right: 0;
+	width: 100px;
+	height: 40px;
+	background: black;
+	color: white;
+	font-size: 20px;
+	padding: 7px;
+	text-align: center;
+	border-top-left-radius: 15px;
+	border-bottom-left-radius: 15px;
+} */
+
+.stroke-width {
+	background-color: #ddd;
+	border-radius: 25px;
+	padding: 5px;
+	width: 230px;
+	height: 45px;
+	display: none;
+	justify-content: space-around;
+	align-items: center;
+	position: absolute;
+	top: 7px;
+	left: 55%;
+}
+.stroke-width.show {
+	display: flex;
+}
+.small,
+.medium,
+.large {
+	width: 50px;
+	background: black;
+}
+.small {
+	height: 6px;
+}
+.medium {
+	height: 10px;
+}
+.large {
+	height: 14px;
+}
