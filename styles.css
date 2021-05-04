@@ -44,7 +44,7 @@ body {
 	align-content: center;
 	position: absolute;
 	top: 7px;
-	left: 45%;
+	left: 50%;
 	display: none;
 }
 .colors.show {
@@ -106,7 +106,7 @@ body {
 	align-items: center;
 	position: absolute;
 	top: 7px;
-	left: 55%;
+	left: 60%;
 }
 .stroke-width.show {
 	display: flex;

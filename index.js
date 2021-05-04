@@ -15,15 +15,21 @@ canvas.height = 10000;
 let drawColor = 'black';
 let isDrawing = false;
 let strokeWidth = 3;
-let undoArray = [];
-let index = -1;
+let points = [];
+ctx.lineCap = 'round';
+ctx.lineJoin = 'round';
+ctx.shadowBlur = 3;
 
 //whiteboard functions
 //when mouse is clicked
 canvas.addEventListener('mousedown', (e) => {
+	// ctx.beginPath();
+	points.push({
+		x: e.clientX - canvas.offsetLeft,
+		y: e.clientY - canvas.offsetTop,
+	});
+
 	isDrawing = true;
-	ctx.beginPath();
-	ctx.moveTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
 
 	//hide palatte
 	colors.classList.remove('show');
@@ -34,11 +40,27 @@ canvas.addEventListener('mousedown', (e) => {
 //when mouse is clicked an drawn
 canvas.addEventListener('mousemove', (e) => {
 	if (isDrawing) {
-		ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
-		ctx.strokeStyle = drawColor;
-		ctx.lineCap = 'round';
-		ctx.lineJoin = 'round';
-		ctx.lineWidth = strokeWidth;
+		points.push({
+			x: e.clientX - canvas.offsetLeft,
+			y: e.clientY - canvas.offsetTop,
+		});
+
+		let p1 = points[0];
+		let p2 = points[1];
+		ctx.beginPath();
+		ctx.moveTo(p1.x, p1.y);
+
+		for (let i = 1; i < points.length; i++) {
+			ctx.strokeStyle = drawColor;
+			ctx.shadowColor = drawColor;
+			ctx.lineWidth = strokeWidth;
+			let midPoint = midPointBtw(p1, p2);
+			ctx.bezierCurveTo(p1.x, p1.y, midPoint.x, midPoint.y, p2.x, p2.y);
+			// ctx.quadraticCurveTo(p1.x, p1.y, midPoint.x, midPoint.y);
+			p1 = points[i];
+			p2 = points[i + 1];
+		}
+		ctx.lineTo(p1.x, p1.y);
 		ctx.stroke();
 	}
 });
@@ -47,10 +69,7 @@ canvas.addEventListener('mousemove', (e) => {
 canvas.addEventListener('mouseup', () => {
 	if (isDrawing) {
 		isDrawing = false;
-		index++;
-		undoArray[index] = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
-		ctx.closePath();
+		points.length = 0;
 	}
 });
 
@@ -58,18 +77,13 @@ canvas.addEventListener('mouseup', () => {
 canvas.addEventListener('mouseout', () => {
 	if (isDrawing) {
 		isDrawing = false;
-		index++;
-		undoArray[index] = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
-		ctx.closePath();
+		points.length = 0;
 	}
 });
 
 //clear the full board
 clearBtn.addEventListener('click', () => {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	undoArray = [];
-	index = -1;
 });
 
 //show and hide palette
@@ -82,6 +96,7 @@ function showPalatte() {
 
 colors.addEventListener('click', (e) => {
 	drawColor = e.target.className;
+	palette.style.color = drawColor;
 	if (e.target.id !== 'colors') colors.classList.remove('show');
 });
 
@@ -104,15 +119,10 @@ strokes.addEventListener('click', (e) => {
 	if (e.target.id !== 'strokeWidth') strokes.classList.remove('show');
 });
 
-//undo action
-undo.addEventListener('click', () => {
-	if (index > 0) {
-		index--;
-		undoArray.pop();
-		ctx.putImageData(undoArray[index], 0, 0);
-	} else {
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		undoArray = [];
-		index = -1;
-	}
-});
+//MIDPOINT CALCULATE
+function midPointBtw(p1, p2) {
+	return {
+		x: p1.x + (p2.x - p1.x) / 2,
+		y: p1.y + (p2.y - p1.y) / 2,
+	};
+}
