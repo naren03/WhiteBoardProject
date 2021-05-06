@@ -44,7 +44,7 @@ body {
 	align-content: center;
 	position: absolute;
 	top: 7px;
-	left: 50%;
+	left: 45%;
 	display: none;
 }
 .colors.show {
@@ -106,7 +106,7 @@ body {
 	align-items: center;
 	position: absolute;
 	top: 7px;
-	left: 60%;
+	left: 55%;
 }
 .stroke-width.show {
 	display: flex;
@@ -138,7 +138,8 @@ body {
 	align-items: center;
 	position: absolute;
 	top: 7px;
-	left: 44%;
+	left: 40%;
+	z-index: 10;
 }
 .stroke-style div a {
 	font-size: 25px;
@@ -146,4 +147,14 @@ body {
 }
 .stroke-style.show {
 	display: flex;
+}
+
+.color-indicator {
+	width: 20px;
+	height: 20px;
+	background-color: black;
+	border-radius: 50%;
+	position: absolute;
+	top: 29px;
+	left: 41.7%;
 }

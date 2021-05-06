@@ -8,6 +8,8 @@ const currentStroke = document.getElementById('strokesType');
 const strokeType = document.getElementById('strokeStyle');
 const strokes = document.getElementById('strokeWidth');
 const undo = document.getElementById('undo');
+const colorIndicator = document.getElementById('color-indicator');
+const clearBoard = document.getElementById('clearBoard');
 
 //dimensions of canvas
 canvas.width = 10000;
@@ -23,7 +25,7 @@ ctx.lineCap = 'round';
 ctx.lineJoin = 'round';
 ctx.shadowBlur = 3;
 let drawType = 'pen';
-let density = 60;
+let density = 80;
 //whiteboard functions
 //when mouse is clicked
 canvas.addEventListener('mousedown', (e) => {
@@ -50,10 +52,6 @@ canvas.addEventListener('mousemove', (e) => {
 	} else if (drawType === 'pen') drawPen(e);
 	else if (drawType === 'ink') drawInk(e);
 	else if (drawType === 'spray') drawSpray(e);
-	// if (isErasing) {
-	// 	isErasing = true;
-	// 	erase(e);
-	// }
 });
 
 function drawInk(e) {
@@ -118,7 +116,7 @@ function drawSpray(e) {
 	ctx.shadowColor = 'white';
 	if (isDrawing) {
 		for (let i = density; i--; ) {
-			let radius = 20;
+			let radius = strokeWidth * 5;
 			let offsetX = getRandomInt(-radius, radius);
 			let offsetY = getRandomInt(-radius, radius);
 			ctx.fillRect(
@@ -148,6 +146,10 @@ canvas.addEventListener('mouseout', () => {
 });
 
 //clear the full board
+clearBoard.addEventListener('click', () => {
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+});
+//clear particular area
 clearBtn.addEventListener('click', (e) => {
 	// ctx.clearRect(0, 0, canvas.width, canvas.height);
 	clearBtn.classList.toggle('clicked');
@@ -155,19 +157,16 @@ clearBtn.addEventListener('click', (e) => {
 canvas.addEventListener('mousedown', () => {
 	if (clearBtn.classList.contains('clicked')) {
 		isErasing = true;
-		console.log('start');
 	}
 });
 canvas.addEventListener('mouseup', () => {
 	if (clearBtn.classList.contains('clicked')) {
 		isErasing = false;
-		console.log('stop');
 	}
 });
 canvas.addEventListener('mouseout', () => {
 	if (clearBtn.classList.contains('clicked')) {
 		isErasing = false;
-		console.log('stop');
 	}
 });
 //erase
@@ -176,17 +175,12 @@ function erase(e) {
 	ctx.fillStyle = 'white';
 	ctx.shadowColor = 'white';
 	if (isErasing) {
-		for (let i = density; i--; ) {
-			// let radius = 20;
-			// let offsetX = getRandomInt(-radius, radius);
-			// let offsetY = getRandomInt(-radius, radius);
-			ctx.fillRect(
-				e.clientX - canvas.offsetLeft,
-				e.clientY - canvas.offsetTop,
-				10,
-				10,
-			);
-		}
+		ctx.fillRect(
+			e.clientX - canvas.offsetLeft - 25,
+			e.clientY - canvas.offsetTop - 25,
+			50,
+			50,
+		);
 	}
 }
 
@@ -202,7 +196,7 @@ function showPalatte() {
 
 colors.addEventListener('click', (e) => {
 	drawColor = e.target.className;
-	palette.style.color = drawColor;
+	colorIndicator.style.background = drawColor;
 	if (e.target.id !== 'colors') colors.classList.remove('show');
 });
 
