@@ -126,3 +126,24 @@ body {
 .large {
 	height: 14px;
 }
+
+.stroke-style {
+	background-color: #ddd;
+	border-radius: 25px;
+	padding: 5px;
+	width: 230px;
+	height: 45px;
+	display: none;
+	justify-content: space-around;
+	align-items: center;
+	position: absolute;
+	top: 7px;
+	left: 44%;
+}
+.stroke-style div a {
+	font-size: 25px;
+	color: purple;
+}
+.stroke-style.show {
+	display: flex;
+}
