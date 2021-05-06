@@ -2,4 +2,5 @@
 2.Add color picker :(false)
 3.Add diff types of brushes (true)
 4.Download The content:(false)
-5.Eraser for particular part:(false)
+5.Eraser for particular part:(true)
+6.Refactor code:(false)

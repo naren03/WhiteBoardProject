@@ -16,6 +16,7 @@ canvas.height = 10000;
 //default variables
 let drawColor = 'black';
 let isDrawing = false;
+let isErasing = false;
 let strokeWidth = 3;
 let points = [];
 ctx.lineCap = 'round';
@@ -44,9 +45,15 @@ canvas.addEventListener('mousedown', (e) => {
 
 //when mouse is clicked an drawn
 canvas.addEventListener('mousemove', (e) => {
-	if (drawType === 'pen') drawPen(e);
+	if (isErasing) {
+		erase(e);
+	} else if (drawType === 'pen') drawPen(e);
 	else if (drawType === 'ink') drawInk(e);
 	else if (drawType === 'spray') drawSpray(e);
+	// if (isErasing) {
+	// 	isErasing = true;
+	// 	erase(e);
+	// }
 });
 
 function drawInk(e) {
@@ -141,9 +148,47 @@ canvas.addEventListener('mouseout', () => {
 });
 
 //clear the full board
-clearBtn.addEventListener('click', () => {
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
+clearBtn.addEventListener('click', (e) => {
+	// ctx.clearRect(0, 0, canvas.width, canvas.height);
+	clearBtn.classList.toggle('clicked');
 });
+canvas.addEventListener('mousedown', () => {
+	if (clearBtn.classList.contains('clicked')) {
+		isErasing = true;
+		console.log('start');
+	}
+});
+canvas.addEventListener('mouseup', () => {
+	if (clearBtn.classList.contains('clicked')) {
+		isErasing = false;
+		console.log('stop');
+	}
+});
+canvas.addEventListener('mouseout', () => {
+	if (clearBtn.classList.contains('clicked')) {
+		isErasing = false;
+		console.log('stop');
+	}
+});
+//erase
+function erase(e) {
+	ctx.lineWidth = 10;
+	ctx.fillStyle = 'white';
+	ctx.shadowColor = 'white';
+	if (isErasing) {
+		for (let i = density; i--; ) {
+			// let radius = 20;
+			// let offsetX = getRandomInt(-radius, radius);
+			// let offsetY = getRandomInt(-radius, radius);
+			ctx.fillRect(
+				e.clientX - canvas.offsetLeft,
+				e.clientY - canvas.offsetTop,
+				10,
+				10,
+			);
+		}
+	}
+}
 
 //show and hide palette
 palette.addEventListener('click', showPalatte);
@@ -152,6 +197,7 @@ function showPalatte() {
 	colors.classList.toggle('show');
 	strokes.classList.remove('show');
 	currentStroke.classList.remove('show');
+	clearBtn.classList.remove('clicked');
 }
 
 colors.addEventListener('click', (e) => {
@@ -167,6 +213,7 @@ function showStroke() {
 	strokes.classList.toggle('show');
 	colors.classList.remove('show');
 	currentStroke.classList.remove('show');
+	clearBtn.classList.remove('clicked');
 }
 
 strokes.addEventListener('click', (e) => {
@@ -188,6 +235,7 @@ function showStrokeTools() {
 	strokeType.classList.toggle('show');
 	strokes.classList.remove('show');
 	colors.classList.remove('show');
+	clearBtn.classList.remove('clicked');
 }
 strokeType.addEventListener('click', (e) => {
 	if (e.target.id === 'spray') {
