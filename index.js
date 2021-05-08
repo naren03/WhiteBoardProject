@@ -1,15 +1,15 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-const clearBtn = document.getElementById('eraser');
-const palette = document.getElementById('palette');
-const colors = document.getElementById('colors');
-const stroke = document.getElementById('stroke');
-const currentStroke = document.getElementById('strokesType');
-const strokeType = document.getElementById('strokeStyle');
-const strokes = document.getElementById('strokeWidth');
-const undo = document.getElementById('undo');
-const colorIndicator = document.getElementById('color-indicator');
-const clearBoard = document.getElementById('clearBoard');
+const clearBtnUI = document.getElementById('eraser');
+const paletteUI = document.getElementById('palette');
+const colorsUI = document.getElementById('colors');
+const strokeUI = document.getElementById('stroke');
+const currentStrokeUI = document.getElementById('strokesType');
+const strokeTypeUI = document.getElementById('strokeStyle');
+const strokeWidthUI = document.getElementById('strokeWidth');
+// const undoUI = document.getElementById('undo');
+const colorIndicatorUI = document.getElementById('color-indicator');
+const clearBoardUI = document.getElementById('clearBoard');
 
 //dimensions of canvas
 canvas.width = 10000;
@@ -38,11 +38,11 @@ canvas.addEventListener('mousedown', (e) => {
 	isDrawing = true;
 
 	//hide palatte
-	colors.classList.remove('show');
+	colorsUI.classList.remove('show');
 	//hide strokes
-	strokes.classList.remove('show');
+	strokeWidthUI.classList.remove('show');
 	//hide tools
-	strokeType.classList.remove('show');
+	strokeTypeUI.classList.remove('show');
 });
 
 //when mouse is clicked an drawn
@@ -146,26 +146,26 @@ canvas.addEventListener('mouseout', () => {
 });
 
 //clear the full board
-clearBoard.addEventListener('click', () => {
+clearBoardUI.addEventListener('click', () => {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 });
 //clear particular area
-clearBtn.addEventListener('click', (e) => {
+clearBtnUI.addEventListener('click', (e) => {
 	// ctx.clearRect(0, 0, canvas.width, canvas.height);
-	clearBtn.classList.toggle('clicked');
+	clearBtnUI.classList.toggle('clicked');
 });
 canvas.addEventListener('mousedown', () => {
-	if (clearBtn.classList.contains('clicked')) {
+	if (clearBtnUI.classList.contains('clicked')) {
 		isErasing = true;
 	}
 });
 canvas.addEventListener('mouseup', () => {
-	if (clearBtn.classList.contains('clicked')) {
+	if (clearBtnUI.classList.contains('clicked')) {
 		isErasing = false;
 	}
 });
 canvas.addEventListener('mouseout', () => {
-	if (clearBtn.classList.contains('clicked')) {
+	if (clearBtnUI.classList.contains('clicked')) {
 		isErasing = false;
 	}
 });
@@ -185,32 +185,33 @@ function erase(e) {
 }
 
 //show and hide palette
-palette.addEventListener('click', showPalatte);
+paletteUI.addEventListener('click', showPalatte);
 
 function showPalatte() {
-	colors.classList.toggle('show');
-	strokes.classList.remove('show');
-	currentStroke.classList.remove('show');
-	clearBtn.classList.remove('clicked');
+	colorsUI.classList.toggle('show');
+	strokeWidthUI.classList.remove('show');
+	currentStrokeUI.classList.remove('show');
+	clearBtnUI.classList.remove('clicked');
 }
 
-colors.addEventListener('click', (e) => {
+colorsUI.addEventListener('click', (e) => {
 	drawColor = e.target.className;
-	colorIndicator.style.background = drawColor;
-	if (e.target.id !== 'colors') colors.classList.remove('show');
+	colorIndicatorUI.style.background = drawColor;
+	if (e.target.id !== 'colors') colorsUI.classList.remove('show');
 });
 
 //show and hide strokes
-stroke.addEventListener('click', showStroke);
+strokeUI.addEventListener('click', showStroke);
 
 function showStroke() {
-	strokes.classList.toggle('show');
-	colors.classList.remove('show');
-	currentStroke.classList.remove('show');
-	clearBtn.classList.remove('clicked');
+	strokeWidthUI.classList.toggle('show');
+	colorsUI.classList.remove('show');
+	currentStrokeUI.classList.remove('show');
+	clearBtnUI.classList.remove('clicked');
+	console.log('sdfdsfg');
 }
 
-strokes.addEventListener('click', (e) => {
+strokeWidthUI.addEventListener('click', (e) => {
 	if (e.target.className === 'small') {
 		strokeWidth = 3;
 	} else if (e.target.className === 'medium') {
@@ -219,33 +220,33 @@ strokes.addEventListener('click', (e) => {
 		strokeWidth = 10;
 	}
 
-	if (e.target.id !== 'strokeWidth') strokes.classList.remove('show');
+	if (e.target.id !== 'strokeWidth') strokeWidthUI.classList.remove('show');
 });
 
 //show and hide strokes styles
-currentStroke.addEventListener('click', showStrokeTools);
+currentStrokeUI.addEventListener('click', showStrokeTools);
 
 function showStrokeTools() {
-	strokeType.classList.toggle('show');
-	strokes.classList.remove('show');
-	colors.classList.remove('show');
-	clearBtn.classList.remove('clicked');
+	strokeTypeUI.classList.toggle('show');
+	strokeWidthUI.classList.remove('show');
+	colorsUI.classList.remove('show');
+	clearBtnUI.classList.remove('clicked');
 }
-strokeType.addEventListener('click', (e) => {
+strokeTypeUI.addEventListener('click', (e) => {
 	if (e.target.id === 'spray') {
-		currentStroke.innerHTML = `<div class="spray"><a><i id="spray" class="fas fa-spray-can"></i></a></div>`;
+		currentStrokeUI.innerHTML = `<div class="spray"><a><i id="spray" class="fas fa-spray-can"></i></a></div>`;
 		drawType = 'spray';
 	} else if (e.target.id === 'pen') {
-		currentStroke.innerHTML = `<div class="pen"><a><i id="pen" class="fas fa-pen"></i></a></div>`;
+		currentStrokeUI.innerHTML = `<div class="pen"><a><i id="pen" class="fas fa-pen"></i></a></div>`;
 		drawType = 'pen';
 	} else if (e.target.id === 'ink') {
-		currentStroke.innerHTML = `<div class="ink"><a><i id="ink" class="fas fa-paint-brush"></i></a></div>`;
+		currentStrokeUI.innerHTML = `<div class="ink"><a><i id="ink" class="fas fa-paint-brush"></i></a></div>`;
 		drawType = 'ink';
 	}
 });
 
-strokeType.addEventListener('click', (e) => {
-	if (e.target.id !== 'strokeStyle') strokeType.classList.remove('show');
+strokeTypeUI.addEventListener('click', (e) => {
+	if (e.target.id !== 'strokeStyle') strokeTypeUI.classList.remove('show');
 });
 
 //MIDPOINT CALCULATE
