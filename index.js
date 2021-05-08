@@ -23,37 +23,13 @@ let strokeWidth = 3;
 let points = [];
 ctx.lineCap = 'round';
 ctx.lineJoin = 'round';
-ctx.shadowBlur = 3;
+ctx.shadowBlur = 2;
 let drawType = 'pen';
 let density = 80;
-//whiteboard functions
-//when mouse is clicked
-canvas.addEventListener('mousedown', (e) => {
-	// ctx.beginPath();
-	points.push({
-		x: e.clientX - canvas.offsetLeft,
-		y: e.clientY - canvas.offsetTop,
-	});
 
-	isDrawing = true;
+//whiteboard drawing functions
 
-	//hide palatte
-	colorsUI.classList.remove('show');
-	//hide strokes
-	strokeWidthUI.classList.remove('show');
-	//hide tools
-	strokeTypeUI.classList.remove('show');
-});
-
-//when mouse is clicked an drawn
-canvas.addEventListener('mousemove', (e) => {
-	if (isErasing) {
-		erase(e);
-	} else if (drawType === 'pen') drawPen(e);
-	else if (drawType === 'ink') drawInk(e);
-	else if (drawType === 'spray') drawSpray(e);
-});
-
+// for drawing with ink
 function drawInk(e) {
 	if (isDrawing) {
 		points.push({
@@ -71,7 +47,9 @@ function drawInk(e) {
 			ctx.shadowColor = drawColor;
 			ctx.lineWidth = strokeWidth;
 			let midPoint = midPointBtw(p1, p2);
+			// first way to draw curves
 			ctx.bezierCurveTo(p1.x, p1.y, midPoint.x, midPoint.y, p2.x, p2.y);
+			// second way to draw curves
 			// ctx.quadraticCurveTo(p1.x, p1.y, midPoint.x, midPoint.y);
 			p1 = points[i];
 			p2 = points[i + 1];
@@ -80,7 +58,7 @@ function drawInk(e) {
 		ctx.stroke();
 	}
 }
-
+// for drawing with pen
 function drawPen(e) {
 	if (isDrawing) {
 		points.push({
@@ -98,7 +76,9 @@ function drawPen(e) {
 			ctx.shadowColor = 'white';
 			ctx.lineWidth = 1;
 			let midPoint = midPointBtw(p1, p2);
+			// first way to draw curves
 			ctx.bezierCurveTo(p1.x, p1.y, midPoint.x, midPoint.y, p2.x, p2.y);
+			// second way to draw curves
 			// ctx.quadraticCurveTo(p1.x, p1.y, midPoint.x, midPoint.y);
 			p1 = points[i];
 			p2 = points[i + 1];
@@ -107,9 +87,7 @@ function drawPen(e) {
 		ctx.stroke();
 	}
 }
-function getRandomInt(min, max) {
-	return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+// for drawing with spray
 function drawSpray(e) {
 	ctx.lineWidth = 10;
 	ctx.fillStyle = drawColor;
@@ -128,8 +106,48 @@ function drawSpray(e) {
 		}
 	}
 }
+// function to give random number for spray painting
+function getRandomInt(min, max) {
+	return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+// function to give midpoint for bezier curves
+function midPointBtw(p1, p2) {
+	return {
+		x: p1.x + (p2.x - p1.x) / 2,
+		y: p1.y + (p2.y - p1.y) / 2,
+	};
+}
 
-//when mouse is released
+//            Canvas functions
+
+//when mouse is clicked on canvas
+canvas.addEventListener('mousedown', (e) => {
+	points.push({
+		x: e.clientX - canvas.offsetLeft,
+		y: e.clientY - canvas.offsetTop,
+	});
+
+	isDrawing = true;
+
+	//hide palatte
+	colorsUI.classList.remove('show');
+	//hide strokes
+	strokeWidthUI.classList.remove('show');
+	//hide tools
+	strokeTypeUI.classList.remove('show');
+});
+
+//when mouse is clicked and drawn on canvas
+canvas.addEventListener('mousemove', (e) => {
+	//if eraser is selected then erase
+	if (isErasing) {
+		erase(e);
+	} else if (drawType === 'pen') drawPen(e);
+	else if (drawType === 'ink') drawInk(e);
+	else if (drawType === 'spray') drawSpray(e);
+});
+
+//when mouse is released on canvas
 canvas.addEventListener('mouseup', () => {
 	if (isDrawing) {
 		isDrawing = false;
@@ -137,7 +155,7 @@ canvas.addEventListener('mouseup', () => {
 	}
 });
 
-//when mouse goes out of window while drawing
+//when mouse goes out of canvas while drawing
 canvas.addEventListener('mouseout', () => {
 	if (isDrawing) {
 		isDrawing = false;
@@ -145,31 +163,120 @@ canvas.addEventListener('mouseout', () => {
 	}
 });
 
-//clear the full board
-clearBoardUI.addEventListener('click', () => {
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
+//                 Navigation Bar Tools
+
+//1.Different Tools Selection
+
+//When Tools icon is clicked
+currentStrokeUI.addEventListener('click', showStrokeTools);
+
+function showStrokeTools() {
+	strokeTypeUI.classList.toggle('show');
+	strokeWidthUI.classList.remove('show');
+	colorsUI.classList.remove('show');
+	clearBtnUI.classList.remove('clicked');
+	currentStrokeUI.classList.add('clicked');
+}
+
+//Selecting Different tools from the given list
+strokeTypeUI.addEventListener('click', (e) => {
+	if (e.target.id === 'spray') {
+		currentStrokeUI.innerHTML = `<div class="spray"><a><i id="spray" class="fas fa-spray-can"></i></a></div>`;
+		drawType = 'spray';
+	} else if (e.target.id === 'pen') {
+		currentStrokeUI.innerHTML = `<div class="pen"><a><i id="pen" class="fas fa-pen"></i></a></div>`;
+		drawType = 'pen';
+	} else if (e.target.id === 'ink') {
+		currentStrokeUI.innerHTML = `<div class="ink"><a><i id="ink" class="fas fa-paint-brush"></i></a></div>`;
+		drawType = 'ink';
+	}
 });
-//clear particular area
-clearBtnUI.addEventListener('click', (e) => {
-	// ctx.clearRect(0, 0, canvas.width, canvas.height);
+//Closing the tools list automatically after selecting a tool
+strokeTypeUI.addEventListener('click', (e) => {
+	if (e.target.id !== 'strokeStyle') strokeTypeUI.classList.remove('show');
+});
+
+//2.Different Colors Selection
+
+//When palatte icon is clicked
+paletteUI.addEventListener('click', showPalatte);
+
+function showPalatte() {
+	colorsUI.classList.toggle('show');
+	strokeWidthUI.classList.remove('show');
+	currentStrokeUI.classList.remove('show');
+	clearBtnUI.classList.remove('clicked');
+}
+
+//Selecting Different colors from the given list
+colorsUI.addEventListener('click', (e) => {
+	drawColor = e.target.className;
+	colorIndicatorUI.style.background = drawColor;
+
+	//Closing the tools list automatically after selecting a tool
+	if (e.target.id !== 'colors') colorsUI.classList.remove('show');
+});
+
+//3.Different Width Selection
+
+//When scale icon is clicked
+strokeUI.addEventListener('click', showStroke);
+
+function showStroke() {
+	strokeWidthUI.classList.toggle('show');
+	colorsUI.classList.remove('show');
+	currentStrokeUI.classList.remove('show');
+	clearBtnUI.classList.remove('clicked');
+	console.log('sdfdsfg');
+}
+//Selecting Different widths from the given list
+strokeWidthUI.addEventListener('click', (e) => {
+	if (e.target.className === 'small') {
+		strokeWidth = 3;
+	} else if (e.target.className === 'medium') {
+		strokeWidth = 6;
+	} else if (e.target.className === 'large') {
+		strokeWidth = 10;
+	}
+
+	if (e.target.id !== 'strokeWidth') strokeWidthUI.classList.remove('show');
+});
+//Closing the widths list automatically after selecting a width size
+strokeWidthUI.addEventListener('click', (e) => {
+	if (e.target.id !== 'strokeWidth') strokeWidthUI.classList.remove('show');
+});
+
+//4.Eraser Selection
+//This will erase a particular area
+
+//when we click on eraser icon
+clearBtnUI.addEventListener('click', () => {
 	clearBtnUI.classList.toggle('clicked');
+	currentStrokeUI.classList.remove('clicked');
 });
+
+//when eraser is selected and clicked on canvas
 canvas.addEventListener('mousedown', () => {
 	if (clearBtnUI.classList.contains('clicked')) {
 		isErasing = true;
 	}
 });
+
+//when eraser is selected and mouse is released on canvas
 canvas.addEventListener('mouseup', () => {
 	if (clearBtnUI.classList.contains('clicked')) {
 		isErasing = false;
 	}
 });
+
+//when eraser is selected and mouse is taken out of canvas
 canvas.addEventListener('mouseout', () => {
 	if (clearBtnUI.classList.contains('clicked')) {
 		isErasing = false;
 	}
 });
-//erase
+
+//erase function
 function erase(e) {
 	ctx.lineWidth = 10;
 	ctx.fillStyle = 'white';
@@ -184,75 +291,7 @@ function erase(e) {
 	}
 }
 
-//show and hide palette
-paletteUI.addEventListener('click', showPalatte);
-
-function showPalatte() {
-	colorsUI.classList.toggle('show');
-	strokeWidthUI.classList.remove('show');
-	currentStrokeUI.classList.remove('show');
-	clearBtnUI.classList.remove('clicked');
-}
-
-colorsUI.addEventListener('click', (e) => {
-	drawColor = e.target.className;
-	colorIndicatorUI.style.background = drawColor;
-	if (e.target.id !== 'colors') colorsUI.classList.remove('show');
+//5.Delete All Content on Board
+clearBoardUI.addEventListener('click', () => {
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
 });
-
-//show and hide strokes
-strokeUI.addEventListener('click', showStroke);
-
-function showStroke() {
-	strokeWidthUI.classList.toggle('show');
-	colorsUI.classList.remove('show');
-	currentStrokeUI.classList.remove('show');
-	clearBtnUI.classList.remove('clicked');
-	console.log('sdfdsfg');
-}
-
-strokeWidthUI.addEventListener('click', (e) => {
-	if (e.target.className === 'small') {
-		strokeWidth = 3;
-	} else if (e.target.className === 'medium') {
-		strokeWidth = 6;
-	} else if (e.target.className === 'large') {
-		strokeWidth = 10;
-	}
-
-	if (e.target.id !== 'strokeWidth') strokeWidthUI.classList.remove('show');
-});
-
-//show and hide strokes styles
-currentStrokeUI.addEventListener('click', showStrokeTools);
-
-function showStrokeTools() {
-	strokeTypeUI.classList.toggle('show');
-	strokeWidthUI.classList.remove('show');
-	colorsUI.classList.remove('show');
-	clearBtnUI.classList.remove('clicked');
-}
-strokeTypeUI.addEventListener('click', (e) => {
-	if (e.target.id === 'spray') {
-		currentStrokeUI.innerHTML = `<div class="spray"><a><i id="spray" class="fas fa-spray-can"></i></a></div>`;
-		drawType = 'spray';
-	} else if (e.target.id === 'pen') {
-		currentStrokeUI.innerHTML = `<div class="pen"><a><i id="pen" class="fas fa-pen"></i></a></div>`;
-		drawType = 'pen';
-	} else if (e.target.id === 'ink') {
-		currentStrokeUI.innerHTML = `<div class="ink"><a><i id="ink" class="fas fa-paint-brush"></i></a></div>`;
-		drawType = 'ink';
-	}
-});
-
-strokeTypeUI.addEventListener('click', (e) => {
-	if (e.target.id !== 'strokeStyle') strokeTypeUI.classList.remove('show');
-});
-
-//MIDPOINT CALCULATE
-function midPointBtw(p1, p2) {
-	return {
-		x: p1.x + (p2.x - p1.x) / 2,
-		y: p1.y + (p2.y - p1.y) / 2,
-	};
-}
