@@ -1,19 +1,22 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
+
 const clearBtnUI = document.getElementById('eraser');
 const paletteUI = document.getElementById('palette');
 const colorsUI = document.getElementById('colors');
 const strokeUI = document.getElementById('stroke');
+const undoUI = document.getElementById('undo');
+const clearBoardUI = document.getElementById('clearBoard');
+const downloadUI = document.getElementById('download');
+
 const currentStrokeUI = document.getElementById('strokesType');
 const strokeTypeUI = document.getElementById('strokeStyle');
 const strokeWidthUI = document.getElementById('strokeWidth');
-// const undoUI = document.getElementById('undo');
 const colorIndicatorUI = document.getElementById('color-indicator');
-const clearBoardUI = document.getElementById('clearBoard');
 
 //dimensions of canvas
-canvas.width = 10000;
-canvas.height = 10000;
+canvas.width = 1000;
+canvas.height = 1000;
 
 //default variables
 let drawColor = 'black';
@@ -118,7 +121,7 @@ function midPointBtw(p1, p2) {
 	};
 }
 
-//            Canvas functions
+//                     Canvas functions
 
 //when mouse is clicked on canvas
 canvas.addEventListener('mousedown', (e) => {
@@ -163,7 +166,7 @@ canvas.addEventListener('mouseout', () => {
 	}
 });
 
-//                 Navigation Bar Tools
+//                    Navigation Bar Tools
 
 //1.Different Tools Selection
 
@@ -294,4 +297,15 @@ function erase(e) {
 //5.Delete All Content on Board
 clearBoardUI.addEventListener('click', () => {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
+});
+
+//6.Undo Functionality
+
+//7.Download Functionality
+downloadUI.addEventListener('click', () => {
+	let canvasContent = document.getElementById('canvas');
+
+	canvasContent.toBlob(function (blob) {
+		saveAs(blob, `wb${new Date().getTime()}.png`);
+	});
 });
