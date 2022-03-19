@@ -1,5 +1,3 @@
-1.Add undo :(false)
-2.Add color picker :(false)
-3.Download The content:(false)
-
-
+1.Add undo
+2.Add color picker
+3.Download The content

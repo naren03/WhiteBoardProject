@@ -80,21 +80,6 @@ body {
 	background-color: green;
 }
 
-/* .color-indicator {
-	position: absolute;
-	top: 60px;
-	right: 0;
-	width: 100px;
-	height: 40px;
-	background: black;
-	color: white;
-	font-size: 20px;
-	padding: 7px;
-	text-align: center;
-	border-top-left-radius: 15px;
-	border-bottom-left-radius: 15px;
-} */
-
 .stroke-width {
 	background-color: #ddd;
 	border-radius: 25px;
@@ -149,12 +134,15 @@ body {
 	display: flex;
 }
 
+.palette {
+	position: relative;
+}
 .color-indicator {
 	width: 20px;
 	height: 20px;
 	background-color: black;
 	border-radius: 50%;
 	position: absolute;
-	top: 29px;
-	left: 41.7%;
+	bottom: 12px;
+	right: 15px;
 }
