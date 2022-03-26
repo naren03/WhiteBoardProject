@@ -1,8 +1,11 @@
+Important
+
 1.Add undo
-2.Add color picker
-3.Show pop up to change name of file while downloading
-4.change width of tools custom
 5.shapes adding feature
 6.check responsiveness
+
+Remmaining
+
+2.Add color picker
+4.change width of tools custom
 7.check if graphic tablet pen works with it or not
-8.extension of image being Download

@@ -12,7 +12,7 @@ body {
 .tools {
 	height: 60px;
 	width: 100%;
-	box-shadow: 5px 5px 20px 2px #ccc;
+	box-shadow: 5px 5px 20px 1px #ccc;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -35,6 +35,48 @@ body {
 	background-color: #eee;
 }
 
+/* Stroke Type Styles */
+.strokesType {
+	position: relative;
+}
+
+.stroke-style {
+	background-color: #ddd;
+	border-radius: 25px;
+	padding: 5px;
+	width: 230px;
+	height: 45px;
+	display: none;
+	justify-content: space-around;
+	align-items: center;
+	position: absolute;
+	top: 9px;
+	left: 70px;
+	z-index: 10;
+}
+.stroke-style div a {
+	font-size: 25px;
+	color: purple;
+}
+.stroke-style.show {
+	display: flex;
+}
+
+/* Color Pallate Styles */
+.palette {
+	position: relative;
+}
+
+.color-indicator {
+	width: 20px;
+	height: 20px;
+	background-color: black;
+	border-radius: 50%;
+	position: absolute;
+	bottom: 12px;
+	right: 15px;
+}
+
 .colors {
 	background-color: #ddd;
 	border-radius: 25px;
@@ -43,9 +85,10 @@ body {
 	justify-content: space-around;
 	align-content: center;
 	position: absolute;
-	top: 7px;
-	left: 45%;
+	top: 9px;
+	left: 70px;
 	display: none;
+	z-index: 10;
 }
 .colors.show {
 	display: flex;
@@ -80,6 +123,8 @@ body {
 	background-color: green;
 }
 
+/* Stroke Width Styles */
+
 .stroke-width {
 	background-color: #ddd;
 	border-radius: 25px;
@@ -111,39 +156,43 @@ body {
 .large {
 	height: 14px;
 }
-
-.stroke-style {
-	background-color: #ddd;
-	border-radius: 25px;
-	padding: 5px;
-	width: 230px;
-	height: 45px;
-	display: none;
-	justify-content: space-around;
-	align-items: center;
-	position: absolute;
-	top: 7px;
-	left: 40%;
-	z-index: 10;
-}
-.stroke-style div a {
-	font-size: 25px;
-	color: purple;
-}
-.stroke-style.show {
-	display: flex;
-}
-
-.palette {
+.stroke {
 	position: relative;
 }
-
-.color-indicator {
-	width: 20px;
-	height: 20px;
-	background-color: black;
-	border-radius: 50%;
+.stroke-width {
 	position: absolute;
-	bottom: 12px;
-	right: 15px;
+	top: 9px;
+	left: 70px;
+}
+
+/* Download Pop Up */
+.download-popup {
+	display: none;
+}
+.download-popup.show {
+	display: flex;
+	flex-direction: column;
+	width: 400px;
+	height: 300px;
+	/* background-color: black; */
+	border: 3px solid black;
+	position: absolute;
+	top: 20vh;
+	left: 35vw;
+	padding: 30px;
+}
+
+.download-popup #filename {
+	width: 90%;
+	height: 20%;
+	font-size: 24px;
+	margin: 0px auto;
+	outline: none;
+}
+
+.download-popup #downloadBtn {
+	width: 90%;
+	height: 20%;
+	font-size: 30px;
+	margin: 20px auto;
 }

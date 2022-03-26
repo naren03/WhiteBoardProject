@@ -15,8 +15,8 @@ const strokeWidthUI = document.getElementById('strokeWidth');
 const colorIndicatorUI = document.getElementById('color-indicator');
 
 //dimensions of canvas
-canvas.width = 1000;
-canvas.height = 1000;
+canvas.width = 5000;
+canvas.height = 5000;
 
 //default variables
 let drawColor = 'black';
@@ -303,9 +303,24 @@ clearBoardUI.addEventListener('click', () => {
 
 //7.Download Functionality
 downloadUI.addEventListener('click', () => {
-	let canvasContent = document.getElementById('canvas');
+	const PopupUI = document.querySelector('.download-popup');
 
-	canvasContent.toBlob(function (blob) {
-		saveAs(blob, `wb${new Date().getTime()}.png`);
+	// display download popup
+	PopupUI.classList.add('show');
+	let filename = PopupUI.children[0];
+
+	const dwnldBtn = PopupUI.children[1];
+
+	dwnldBtn.addEventListener('click', () => {
+		if (filename.value != '') {
+			let canvasContent = document.getElementById('canvas');
+
+			canvasContent.toBlob(function (blob) {
+				saveAs(blob, `${filename.value}.png`);
+			});
+
+			// disapper download popup
+			PopupUI.classList.remove('show');
+		}
 	});
 });
