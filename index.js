@@ -15,8 +15,8 @@ const strokeWidthUI = document.getElementById('strokeWidth');
 const colorIndicatorUI = document.getElementById('color-indicator');
 
 //dimensions of canvas
-canvas.width = 5000;
-canvas.height = 5000;
+canvas.width = 1600;
+canvas.height = 1400;
 
 //default variables
 let drawColor = 'black';
@@ -85,6 +85,9 @@ function drawPen(e) {
 			// ctx.quadraticCurveTo(p1.x, p1.y, midPoint.x, midPoint.y);
 			p1 = points[i];
 			p2 = points[i + 1];
+
+			// setting data to line to localstorage
+			localStorage.setItem('points', JSON.stringify(points));
 		}
 		ctx.lineTo(p1.x, p1.y);
 		ctx.stroke();
@@ -230,7 +233,6 @@ function showStroke() {
 	colorsUI.classList.remove('show');
 	currentStrokeUI.classList.remove('show');
 	clearBtnUI.classList.remove('clicked');
-	console.log('sdfdsfg');
 }
 //Selecting Different widths from the given list
 strokeWidthUI.addEventListener('click', (e) => {
@@ -300,7 +302,10 @@ clearBoardUI.addEventListener('click', () => {
 });
 
 //6.Undo Functionality
-
+undoUI.addEventListener('click', () => {
+	ctx.fillStyle = 'black';
+	ctx.fillRect(0, 0, 150, 70);
+});
 //7.Download Functionality
 downloadUI.addEventListener('click', () => {
 	const PopupUI = document.querySelector('.download-popup');
@@ -321,6 +326,90 @@ downloadUI.addEventListener('click', () => {
 
 			// disapper download popup
 			PopupUI.classList.remove('show');
+			setTimeout(() => {
+				filename.value = '';
+			}, 3000);
 		}
 	});
 });
+
+// 8.Adding Shapes Functionality
+canvas.addEventListener('click', (e) => {
+	ctx.fillStyle = drawColor;
+	ctx.fillRect(
+		e.clientX - canvas.offsetLeft,
+		e.clientY - canvas.offsetTop,
+		300,
+		200,
+	);
+});
+
+// canvas.addEventListener('dblclick', (e) => {
+// 	ctx.fillStyle = drawColor;
+
+// 	ctx.beginPath();
+// 	ctx.arc(
+// 		e.clientX - canvas.offsetLeft,
+// 		e.clientY - canvas.offsetTop,
+// 		100,
+// 		0,
+// 		2 * Math.PI,
+// 	);
+// 	ctx.fill();
+// });
+
+//9. Add KeyBoard Shorcuts
+
+//Array to store no of keys
+let keyArray = [];
+let toolType = 0;
+
+document.addEventListener('keydown', (e) => {
+	keyArray.push(e.key);
+	// console.log(e.key);
+
+	if (keyArray.length == 1) {
+		if (checkDownKey()) {
+		} else {
+			keyArray = [];
+		}
+	} else if (keyArray.length == 2) {
+		if (checkDownKey() && checkTKey()) {
+			console.log('Change Tool');
+
+			if (toolType == 0) {
+				currentStrokeUI.innerHTML = `<div class="spray"><a><i id="spray" class="fas fa-spray-can"></i></a></div>`;
+				drawType = 'spray';
+
+				toolType++;
+			} else if (toolType == 1) {
+				currentStrokeUI.innerHTML = `<div class="ink"><a><i id="ink" class="fas fa-paint-brush"></i></a></div>`;
+				drawType = 'ink';
+
+				toolType++;
+			} else if (toolType == 2) {
+				currentStrokeUI.innerHTML = `<div class="pen"><a><i id="pen" class="fas fa-pen"></i></a></div>`;
+				drawType = 'pen';
+
+				toolType++;
+			} else {
+				toolType = 0;
+			}
+
+			keyArray = [];
+		} else {
+			keyArray = [];
+		}
+	} else {
+		keyArray = [];
+	}
+});
+
+function checkDownKey() {
+	if (keyArray[0] === 'ArrowDown') return 1;
+	else return 0;
+}
+function checkTKey() {
+	if (keyArray[1] === 't' || keyArray[1] === 'T') return 1;
+	else return 0;
+}

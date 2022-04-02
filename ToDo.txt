@@ -3,7 +3,7 @@ Important
 1.Add undo
 5.shapes adding feature
 6.check responsiveness
-
+8.Add shortcut keys
 Remmaining
 
 2.Add color picker
