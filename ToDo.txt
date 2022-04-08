@@ -1,11 +1,6 @@
 Important
 
-1.Add undo
-5.shapes adding feature
-6.check responsiveness
-8.Add shortcut keys
-Remmaining
-
-2.Add color picker
-4.change width of tools custom
-7.check if graphic tablet pen works with it or not
+1.Add local storage using putimage and getimage method
+2.shapes adding feature
+3.check responsiveness
+4.Add shortcut keys

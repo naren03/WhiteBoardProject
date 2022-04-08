@@ -167,6 +167,28 @@ body {
 	left: 70px;
 }
 
+/* Shapes Types */
+
+.shapes {
+	position: relative;
+}
+.shapes-type {
+	background-color: #ddd;
+	border-radius: 25px;
+	padding: 5px;
+	width: 230px;
+	height: 45px;
+	display: none;
+	justify-content: space-around;
+	align-items: center;
+	position: absolute;
+	top: 7px;
+	left: 100%;
+}
+.shapes-type.show {
+	display: flex;
+	flex-direction: row;
+}
 /* Download Pop Up */
 .download-popup {
 	display: none;

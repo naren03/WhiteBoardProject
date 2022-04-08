@@ -1,6 +1,7 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
+// Menu
 const clearBtnUI = document.getElementById('eraser');
 const paletteUI = document.getElementById('palette');
 const colorsUI = document.getElementById('colors');
@@ -8,11 +9,14 @@ const strokeUI = document.getElementById('stroke');
 const undoUI = document.getElementById('undo');
 const clearBoardUI = document.getElementById('clearBoard');
 const downloadUI = document.getElementById('download');
+const shapesUI = document.getElementById('shapes');
 
+// Sub Menu
 const currentStrokeUI = document.getElementById('strokesType');
 const strokeTypeUI = document.getElementById('strokeStyle');
 const strokeWidthUI = document.getElementById('strokeWidth');
 const colorIndicatorUI = document.getElementById('color-indicator');
+const shapesTypeUI = document.getElementById('shapesType');
 
 //dimensions of canvas
 canvas.width = 1600;
@@ -29,10 +33,12 @@ ctx.lineJoin = 'round';
 ctx.shadowBlur = 2;
 let drawType = 'pen';
 let density = 80;
+let undoArray = [];
+let index = -1;
 
-//whiteboard drawing functions
+//			Whiteboard Drawing Functions
 
-// for drawing with ink
+// 1. Drawing with Ink
 function drawInk(e) {
 	if (isDrawing) {
 		points.push({
@@ -61,7 +67,7 @@ function drawInk(e) {
 		ctx.stroke();
 	}
 }
-// for drawing with pen
+// 2. Drawing With Pen
 function drawPen(e) {
 	if (isDrawing) {
 		points.push({
@@ -93,7 +99,7 @@ function drawPen(e) {
 		ctx.stroke();
 	}
 }
-// for drawing with spray
+// 3. Drawing With Spray
 function drawSpray(e) {
 	ctx.lineWidth = 10;
 	ctx.fillStyle = drawColor;
@@ -112,11 +118,13 @@ function drawSpray(e) {
 		}
 	}
 }
-// function to give random number for spray painting
+
+// Random Points for Spray Painting
 function getRandomInt(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-// function to give midpoint for bezier curves
+
+// Mid Points for Bezier Curves
 function midPointBtw(p1, p2) {
 	return {
 		x: p1.x + (p2.x - p1.x) / 2,
@@ -124,9 +132,9 @@ function midPointBtw(p1, p2) {
 	};
 }
 
-//                     Canvas functions
+//				Canvas Functions (Mouse Based)
 
-//when mouse is clicked on canvas
+//Mouse Clicked On Canvas
 canvas.addEventListener('mousedown', (e) => {
 	points.push({
 		x: e.clientX - canvas.offsetLeft,
@@ -143,7 +151,7 @@ canvas.addEventListener('mousedown', (e) => {
 	strokeTypeUI.classList.remove('show');
 });
 
-//when mouse is clicked and drawn on canvas
+//Mouse Clicked On Canvas and Drawing Starts
 canvas.addEventListener('mousemove', (e) => {
 	//if eraser is selected then erase
 	if (isErasing) {
@@ -153,23 +161,37 @@ canvas.addEventListener('mousemove', (e) => {
 	else if (drawType === 'spray') drawSpray(e);
 });
 
-//when mouse is released on canvas
+//Mouse Released On Canvas (Drawing Stop)
 canvas.addEventListener('mouseup', () => {
 	if (isDrawing) {
 		isDrawing = false;
+		//
+		index++;
+		undoArray[index] = ctx.getImageData(0, 0, canvas.width, canvas.height);
+		console.log(index);
+		console.log(undoArray);
+		ctx.closePath();
+		//
 		points.length = 0;
 	}
 });
 
-//when mouse goes out of canvas while drawing
+//Mouse Goes out of Canvas While Drawing
 canvas.addEventListener('mouseout', () => {
 	if (isDrawing) {
 		isDrawing = false;
+		//
+		index++;
+		undoArray[index] = ctx.getImageData(0, 0, canvas.width, canvas.height);
+		console.log(index);
+		console.log(undoArray);
+		ctx.closePath();
+		//
 		points.length = 0;
 	}
 });
 
-//                    Navigation Bar Tools
+//			Navigation Bar Tools
 
 //1.Different Tools Selection
 
@@ -299,13 +321,30 @@ function erase(e) {
 //5.Delete All Content on Board
 clearBoardUI.addEventListener('click', () => {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	undoArray = [];
+	index = -1;
 });
 
 //6.Undo Functionality
 undoUI.addEventListener('click', () => {
-	ctx.fillStyle = 'black';
-	ctx.fillRect(0, 0, 150, 70);
+	// call Undo Function
+	undoDrawing();
 });
+
+// Undo Function
+function undoDrawing() {
+	if (index > 0) {
+		index--;
+		undoArray.pop();
+		ctx.putImageData(undoArray[index], 0, 0);
+		console.log(index);
+		console.log(undoArray);
+	} else {
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		undoArray = [];
+		index = -1;
+	}
+}
 //7.Download Functionality
 downloadUI.addEventListener('click', () => {
 	const PopupUI = document.querySelector('.download-popup');
@@ -324,7 +363,7 @@ downloadUI.addEventListener('click', () => {
 				saveAs(blob, `${filename.value}.png`);
 			});
 
-			// disapper download popup
+			// disappear download popup
 			PopupUI.classList.remove('show');
 			setTimeout(() => {
 				filename.value = '';
@@ -334,15 +373,15 @@ downloadUI.addEventListener('click', () => {
 });
 
 // 8.Adding Shapes Functionality
-canvas.addEventListener('click', (e) => {
-	ctx.fillStyle = drawColor;
-	ctx.fillRect(
-		e.clientX - canvas.offsetLeft,
-		e.clientY - canvas.offsetTop,
-		300,
-		200,
-	);
-});
+// canvas.addEventListener('click', (e) => {
+// 	ctx.fillStyle = drawColor;
+// 	ctx.fillRect(
+// 		e.clientX - canvas.offsetLeft,
+// 		e.clientY - canvas.offsetTop,
+// 		300,
+// 		200,
+// 	);
+// });
 
 // canvas.addEventListener('dblclick', (e) => {
 // 	ctx.fillStyle = drawColor;
@@ -360,9 +399,12 @@ canvas.addEventListener('click', (e) => {
 
 //9. Add KeyBoard Shorcuts
 
-//Array to store no of keys
+//Array to store no of keys entered
 let keyArray = [];
+// 0-Pen 1-Spray 2-Ink
 let toolType = 0;
+// 0-Small 1-Medium 2-Large
+let toolWidth = 0;
 
 document.addEventListener('keydown', (e) => {
 	keyArray.push(e.key);
@@ -373,30 +415,89 @@ document.addEventListener('keydown', (e) => {
 		} else {
 			keyArray = [];
 		}
-	} else if (keyArray.length == 2) {
+	}
+	// if valid keys are pressed
+	else if (keyArray.length == 2) {
+		// For Tool Change T
 		if (checkDownKey() && checkTKey()) {
 			console.log('Change Tool');
 
+			// Existing - Pen =>>>> Change to Spray
 			if (toolType == 0) {
 				currentStrokeUI.innerHTML = `<div class="spray"><a><i id="spray" class="fas fa-spray-can"></i></a></div>`;
 				drawType = 'spray';
 
 				toolType++;
-			} else if (toolType == 1) {
+			}
+			// Existing - Spray =>>>> Change to Ink
+			else if (toolType == 1) {
 				currentStrokeUI.innerHTML = `<div class="ink"><a><i id="ink" class="fas fa-paint-brush"></i></a></div>`;
 				drawType = 'ink';
 
 				toolType++;
-			} else if (toolType == 2) {
+			}
+			// Existing - Ink =>>>> Change to Pen
+			else if (toolType == 2) {
 				currentStrokeUI.innerHTML = `<div class="pen"><a><i id="pen" class="fas fa-pen"></i></a></div>`;
 				drawType = 'pen';
 
-				toolType++;
+				toolType = 0;
 			} else {
 				toolType = 0;
 			}
 
 			keyArray = [];
+		}
+		// For Width Change
+		else if (checkDownKey() && checkWKey()) {
+			console.log('Change Width');
+
+			if (toolWidth == 0) {
+				strokeWidth = 3;
+
+				toolWidth++;
+			} else if (toolWidth == 1) {
+				strokeWidth = 6;
+
+				toolWidth++;
+			} else if (toolWidth == 2) {
+				strokeWidth = 10;
+
+				toolWidth = 0;
+			} else {
+				toolWidth = 0;
+			}
+
+			keyArray = [];
+		}
+		// Clear the Board
+		else if (checkDownKey() && checkDKey()) {
+			console.log('Clear Board');
+
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+		}
+		// For Undo Action
+		else if (checkDownKey() && checkUKey()) {
+			console.log('Undo');
+
+			// Call Undo Function
+			undoDrawing();
+
+			keyArray = [];
+		}
+		// Remove Shapes
+		else if (checkDownKey() && checkRKey()) {
+			console.log('Remove Shape');
+
+			canvas.removeEventListener('click', (e) => {
+				ctx.fillStyle = drawColor;
+				ctx.fillRect(
+					e.clientX - canvas.offsetLeft,
+					e.clientY - canvas.offsetTop,
+					300,
+					200,
+				);
+			});
 		} else {
 			keyArray = [];
 		}
@@ -405,11 +506,82 @@ document.addEventListener('keydown', (e) => {
 	}
 });
 
+// Check Down Arrow
 function checkDownKey() {
 	if (keyArray[0] === 'ArrowDown') return 1;
 	else return 0;
 }
+
+// Check T key
 function checkTKey() {
 	if (keyArray[1] === 't' || keyArray[1] === 'T') return 1;
 	else return 0;
 }
+
+// Check W key
+function checkWKey() {
+	if (keyArray[1] === 'w' || keyArray[1] === 'W') return 1;
+	else return 0;
+}
+
+// Check D key
+function checkDKey() {
+	if (keyArray[1] === 'd' || keyArray[1] === 'D') return 1;
+	else return 0;
+}
+
+// Check R key
+function checkRKey() {
+	if (keyArray[1] === 'r' || keyArray[1] === 'R') return 1;
+	else return 0;
+}
+
+// Check U key
+function checkUKey() {
+	if (keyArray[1] === 'u' || keyArray[1] === 'U') return 1;
+	else return 0;
+}
+
+// 10. Selecting Shapes
+shapesUI.addEventListener('click', showShapes);
+
+function showShapes() {
+	shapesTypeUI.classList.toggle('show');
+	colorsUI.classList.remove('show');
+	strokeTypeUI.classList.remove('show');
+	strokeWidthUI.classList.remove('show');
+	currentStrokeUI.classList.remove('show');
+	clearBtnUI.classList.remove('clicked');
+}
+//Selecting Different Shapes from the given list
+shapesTypeUI.addEventListener('click', (e) => {
+	if (e.target.classList.contains('fa-square')) {
+		console.log('Square');
+
+		clickCount = 0;
+		canvas.addEventListener('click', (e) => {
+			ctx.fillStyle = drawColor;
+			ctx.fillRect(
+				e.clientX - canvas.offsetLeft,
+				e.clientY - canvas.offsetTop,
+				300,
+				200,
+			);
+
+			clickCount++;
+
+			if (clickCount == 1) {
+				canvas.removeEventListener('click', () => console.log('Removed !!!'));
+			}
+		});
+	} else if (e.target.classList.contains('fa-circle')) {
+		console.log('Circle');
+	}
+
+	if (e.target.id === 'shapesType') shapesTypeUI.classList.remove('show');
+});
+
+//Closing the shapes list automatically after selecting a shape
+shapesUI.addEventListener('click', (e) => {
+	if (e.target.id === 'shapesType') shapesTypeUI.classList.remove('show');
+});
