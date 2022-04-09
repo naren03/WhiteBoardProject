@@ -23,17 +23,20 @@
 		<div id="tools" class="tools">
 			<!-- Type of strokes -->
 			<div id="strokesType" class="strokesType pen clicked" data-toggle="tooltip" data-placement="top"
-				title="Select Tool">
+				title="Select Tool(ArrowDown + T)">
 				<a><i id="pen" class="fas fa-pen"></i></a>
 				<div id="strokeStyle" class="stroke-style">
-					<div class="pen">
+					<div class="pen" data-toggle="tooltip" data-placement="top" title="Pen">
 						<a><i id="pen" class="fas fa-pen"></i></a>
 					</div>
-					<div class="spray">
+					<div class="spray" data-toggle="tooltip" data-placement="top" title="Spray">
 						<a><i id="spray" class="fas fa-spray-can"></i></a>
 					</div>
-					<div class="ink">
+					<div class="ink" data-toggle="tooltip" data-placement="top" title="Ink">
 						<a><i id="ink" class="fas fa-paint-brush"></i></a>
+					</div>
+					<div class="shapes" data-toggle="tooltip" data-placement="top" title="Shapes">
+						<a><i id="shapes" class="fa-solid fa-shapes"></i></a>
 					</div>
 				</div>
 			</div>
@@ -53,43 +56,49 @@
 			</div>
 
 			<!-- Width of Stroke -->
-			<div id="stroke" class="stroke" data-toggle="tooltip" data-placement="top" title="Select Width">
+			<div id="stroke" class="stroke" data-toggle="tooltip" data-placement="top" title="Select Width(ArrowDown + W)">
 				<a><i class="fas fa-ruler"></i></a>
 				<div id="strokeWidth" class="stroke-width">
-					<div class="small"></div>
-					<div class="medium"></div>
-					<div class="large"></div>
+					<div class="small" data-toggle="tooltip" data-placement="top" title="Small"></div>
+					<div class="medium" data-toggle="tooltip" data-placement="top" title="Medium"></div>
+					<div class="large" data-toggle="tooltip" data-placement="top" title="Large"></div>
 				</div>
 			</div>
 
 			<!-- Eraser -->
-			<div id="eraser" class="eraser" data-toggle="tooltip" data-placement="top" title="Eraser">
+			<div id="eraser" class="eraser" data-toggle="tooltip" data-placement="top" title="Eraser(ArrowDown + E)">
 				<a><i class="fas fa-eraser"></i></a>
 			</div>
 
 			<!-- Undo Function -->
-			<div id="undo" class="undo" data-toggle="tooltip" data-placement="top" title="Undo">
+			<div id="undo" class="undo" data-toggle="tooltip" data-placement="top" title="Undo(ArrowDown + U)">
 				<a><i class="fas fa-undo"></i></a>
 			</div>
 
+
+
 			<!-- Shapes -->
-			<div id="shapes" class="shapes" data-toggle="tooltip" data-placement="top" title="Add Shapes">
+			<div id="shapesList" class="shapesList" data-toggle="tooltip" data-placement="top" title="Shape Type">
 				<a><i class="fa-solid fa-shapes"></i></a>
 				<div id="shapesType" class="shapes-type">
-					<div class="rectangle"><a><i class="fa-solid fa-square"></i></a></div>
-					<div class="square"><a><i class="fa-solid fa-square"></i></a></div>
-					<div class="circle"><a><i class="fa-solid fa-circle"></i></a></div>
+
+					<!-- <div class="rectangle"><a><i class="fa-solid fa-square"></i></a></div> -->
+					<div class="square"><a><i class="fa-solid fa-square" data-toggle="tooltip" data-placement="top"
+								title="Square"></i></a></div>
+					<div class="circle"><a><i class="fa-solid fa-circle" data-toggle="tooltip" data-placement="top"
+								title="Circle"></i></a></div>
 				</div>
 			</div>
 
 
 			<!-- Download Button -->
-			<div id="download" class="download" data-toggle="tooltip" data-placement="top" title="Download">
+			<div id="download" class="download" data-toggle="tooltip" data-placement="top" title="Download(ArrowDown + D)">
 				<a><i class="fas fa-download"></i></a>
 			</div>
 
 			<!-- Clear Board -->
-			<div id="clearBoard" class="clearBoard" data-toggle="tooltip" data-placement="top" title="Clear Board">
+			<div id="clearBoard" class="clearBoard" data-toggle="tooltip" data-placement="top"
+				title="Clear Board(ArrowDown + R)">
 				<a><i class="fas fa-trash"></i></a>
 			</div>
 		</div>

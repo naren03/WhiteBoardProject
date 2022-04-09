@@ -169,7 +169,7 @@ body {
 
 /* Shapes Types */
 
-.shapes {
+.shapesList {
 	position: relative;
 }
 .shapes-type {
@@ -198,12 +198,12 @@ body {
 	flex-direction: column;
 	width: 400px;
 	height: 300px;
-	/* background-color: black; */
-	border: 3px solid black;
+	background-color: rgb(111, 108, 108);
 	position: absolute;
 	top: 20vh;
 	left: 35vw;
 	padding: 30px;
+	border-radius: 30px;
 }
 
 .download-popup #filename {

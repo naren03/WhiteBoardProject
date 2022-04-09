@@ -1,6 +1,1 @@
-Important
-
-1.Add local storage using putimage and getimage method
-2.shapes adding feature
-3.check responsiveness
-4.Add shortcut keys
+Nothing to do for now.......
